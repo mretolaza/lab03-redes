@@ -1,0 +1,141 @@
+{
+  "routes": [
+    {
+      "node": "A",
+      "neighbor": [
+        {
+          "node": "B",
+          "length": 7
+        },
+        {
+          "node": "I",
+          "length": 1
+        },
+        {
+          "node": "C",
+          "length": 7
+        },
+        {
+          "node": "I",
+          "length": 1
+        }
+      ]
+    },
+    {
+      "node": "B",
+      "neighbor": [
+        {
+          "node": "A",
+          "length": 7
+        },
+        {
+          "node": "F",
+          "length": 2
+        }
+      ]
+    },
+    {
+      "node": "C",
+      "neighbor": [
+        {
+          "node": "A",
+          "length": 7
+        },
+        {
+          "node": "D",
+          "length": 5
+        }
+      ]
+    },
+    {
+      "node": "D",
+      "neighbor": [
+        {
+          "node": "C",
+          "length": 5
+        },
+        {
+          "node": "I",
+          "length": 6
+        },
+        {
+          "node": "E",
+          "length": 1
+        },
+        {
+          "node": "F",
+          "length": 1
+        }
+      ]
+    },
+    {
+      "node": "E",
+      "neighbor": [
+        {
+          "node": "D",
+          "length": 1
+        },
+        {
+          "node": "G",
+          "length": 4
+        }
+      ]
+    },
+    {
+      "node": "F",
+      "neighbor": [
+        {
+          "node": "B",
+          "length": 2
+        },
+        {
+          "node": "D",
+          "length": 1
+        },
+        {
+          "node": "G",
+          "length": 3
+        },
+        {
+          "node": "H",
+          "length": 4
+        }
+      ]
+    },
+    {
+      "node": "G",
+      "neighbor": [
+        {
+          "node": "E",
+          "length": 4
+        },
+        {
+          "node": "F",
+          "length": 3
+        }
+      ]
+    },
+    {
+      "node": "H",
+      "neighbor": [
+        {
+          "node": "F",
+          "length": 4
+        }
+      ]
+    },
+    {
+      "node": "I",
+      "neighbor": [
+        {
+          "node": "A",
+          "length": 1
+        },
+        {
+          "node": "D",
+          "length": 6
+        }
+      ]
+    }
+  ]
+}
