@@ -9,13 +9,19 @@ const menu = require('./lib/menu');
 // Classes
 const XmppClient = require('./classes/XmppClient');
 
+// Handler
+const algorithmHandler = require('./handlers');
+
 // config
 global.config = {
   node: '',
 };
 global.nodes = [];
+global.broadcastedMessages = [];
+global.receivedMessages = [];
 
 // TODO remove default config
+// eslint-disable-next-line import/order
 const fs = require('fs');
 
 const config = JSON.parse(fs.readFileSync('/home/k3v1n/Desktop/M&M/Redes/routing-simulator/routesTable.json'));
@@ -37,6 +43,35 @@ inquirer
       }
 
       global.nodes.push(node);
+    });
+
+    global.xmppClient.events.on('message', (message) => {
+      const messageData = JSON.parse(message.message);
+
+      if (messageData.from === global.config.node) {
+        // Saved received message to me
+        messageData.receivedDate = new Date();
+        global.receivedMessages.push(messageData);
+      } else {
+        // Broadcast message
+        messageData.route.push(global.config.node);
+        let broadcastedTo = [];
+
+        switch (messageData.algorithm) {
+          case 'FLOOD':
+            broadcastedTo = algorithmHandler.flood(messageData);
+            break;
+          default:
+            console.log(messageData.algorithm);
+            broadcastedTo = [];
+            break;
+        }
+
+        global.broadcastedMessages.push({
+          messageReceived: messageData,
+          broadcastedTo,
+        });
+      }
     });
     menu();
   });

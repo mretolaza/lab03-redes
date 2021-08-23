@@ -47,4 +47,9 @@ module.exports = {
     DENY: 'unsubscribed',
     REQUEST: 'subscribe',
   },
+  algorithm: {
+    FLOOD: 'FLOOD',
+    DISTANCE_VECTOR: 'DISTANCE_VECTOR',
+    LINK_STATE: 'LINK_STATE',
+  },
 };
