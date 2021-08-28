@@ -10,7 +10,7 @@ const menu = require('./lib/menu');
 const XmppClient = require('./classes/XmppClient');
 
 // Handler
-const algorithmHandler = require('./handlers');
+const algorithmHandler = require('./handlers/algorithm');
 
 // config
 global.config = {
@@ -29,8 +29,8 @@ global.config.routes = config.routes;
 
 inquirer
   .prompt(questions.serverInfo)
-  .then(({ domain, port }) => {
-    global.xmppClient = new XmppClient(domain, port);
+  .then(({ domain, port, host }) => {
+    global.xmppClient = new XmppClient(domain, port, host);
 
     global.xmppClient.events.on('groupMessage', (message) => {
       const node = JSON.parse(message.message);
@@ -46,6 +46,7 @@ inquirer
     });
 
     global.xmppClient.events.on('message', (message) => {
+      const from = message.from.split('/')[0];
       const messageData = JSON.parse(message.message);
 
       if (messageData.from === global.config.node) {
@@ -54,12 +55,11 @@ inquirer
         global.receivedMessages.push(messageData);
       } else {
         // Broadcast message
-        messageData.route.push(global.config.node);
         let broadcastedTo = [];
 
         switch (messageData.algorithm) {
           case 'FLOOD':
-            broadcastedTo = algorithmHandler.flood(messageData);
+            broadcastedTo = algorithmHandler.flood(from, messageData);
             break;
           default:
             console.log(messageData.algorithm);
