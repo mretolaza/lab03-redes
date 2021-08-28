@@ -32,6 +32,7 @@ module.exports = class XmppClient {
         jid: this.jid,
         password,
         host: this.host,
+        port: this.port,
       });
 
       this.client.on('error', (error) => {
@@ -547,7 +548,7 @@ module.exports = class XmppClient {
     const roomData = {
       presence: {
         from: this.jid,
-        to: `${room}@conference.${this.domain}/${this.nickname}`,
+        to: `${room}@conference.${this.domain}/${this.username}`,
         x: {
           xmlns: constants.namespace.CHAT_ROOMS,
         },
