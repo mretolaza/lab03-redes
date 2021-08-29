@@ -7,10 +7,11 @@ module.exports.flood = async (from, messageData) => {
   const nodeRoute = global.config.routes.find(
     (x) => x.node === global.config.node,
   );
+  const broadcastedTo = [];
 
   if (!nodeRoute) {
     console.log(chalk.red('Node not exists on route table'));
-    return;
+    return [];
   }
 
   if (
@@ -24,6 +25,7 @@ module.exports.flood = async (from, messageData) => {
         messageData.route.push(neighbor);
 
         if (toJID) {
+          broadcastedTo.push(neighbor);
           global.xmppClient
             .sendMessage(toJID, JSON.stringify(messageData));
         } else {
@@ -32,4 +34,6 @@ module.exports.flood = async (from, messageData) => {
       }
     });
   }
+
+  return broadcastedTo;
 };

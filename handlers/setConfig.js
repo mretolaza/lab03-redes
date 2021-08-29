@@ -34,7 +34,7 @@ module.exports = () => new Promise((resolve) => {
 
       global.config.routes = config.routes;
 
-      console.log(chalk.yellow('Message sent successfully'));
+      console.log(chalk.yellow('Configuration loaded successfully'));
       await inquirer.prompt(questions.pressAnyKey);
       return resolve(true);
     });

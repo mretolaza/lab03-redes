@@ -1,4 +1,9 @@
 const inquirer = require('inquirer');
+const {
+  blue,
+  green,
+  yellow,
+} = require('chalk');
 
 // questions
 const questions = require('./lib/inquirerQuestions');
@@ -12,6 +17,9 @@ const XmppClient = require('./classes/XmppClient');
 // Handler
 const algorithmHandler = require('./handlers/algorithm');
 
+// Utils
+const { getNodeName } = require('./utils/node');
+
 // config
 global.config = {
   node: '',
@@ -20,13 +28,6 @@ global.nodes = [];
 global.broadcastedMessages = [];
 global.receivedMessages = [];
 
-// TODO remove default config
-// eslint-disable-next-line import/order
-const fs = require('fs');
-
-const config = JSON.parse(fs.readFileSync('/home/k3v1n/Desktop/M&M/Redes/routing-simulator/routesTable.json'));
-global.config.routes = config.routes;
-
 inquirer
   .prompt(questions.serverInfo)
   .then(({ domain, port, host }) => {
@@ -34,7 +35,6 @@ inquirer
 
     global.xmppClient.events.on('groupMessage', (message) => {
       const node = JSON.parse(message.message);
-      console.log(node);
 
       const nodeIndex = global.nodes.findIndex((x) => x.node === node.node);
 
@@ -45,8 +45,8 @@ inquirer
       global.nodes.push(node);
     });
 
-    global.xmppClient.events.on('message', (message) => {
-      const from = message.from.split('/')[0];
+    global.xmppClient.events.on('message', async (message) => {
+      const fromJid = message.from.split('/')[0];
       const messageData = JSON.parse(message.message);
 
       if (messageData.from === global.config.node) {
@@ -59,7 +59,7 @@ inquirer
 
         switch (messageData.algorithm) {
           case 'FLOOD':
-            broadcastedTo = algorithmHandler.flood(from, messageData);
+            broadcastedTo = await algorithmHandler.flood(fromJid, messageData);
             break;
           default:
             console.log(messageData.algorithm);
@@ -71,6 +71,13 @@ inquirer
           messageReceived: messageData,
           broadcastedTo,
         });
+
+        console.log('\n\n', green('--- NEW MESSAGE ---'));
+        console.log(`${blue('From')}           > ${yellow(messageData.from)}`);
+        console.log(`${blue('To')}             > ${yellow(messageData.to)}`);
+        console.log(`${blue('Message')}        > ${yellow(messageData.message)}`);
+        console.log(`${blue('Received from')}  > ${yellow(getNodeName(fromJid))}`);
+        console.log(`${blue('Broadcasted to')} > ${yellow(broadcastedTo.map((node) => `node: ${node.node} length: ${node.length}`).join('\n'))}`);
       }
     });
     menu();
