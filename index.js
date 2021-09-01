@@ -16,6 +16,7 @@ const XmppClient = require('./classes/XmppClient');
 
 // Handler
 const algorithmHandler = require('./handlers/algorithm');
+const algorithmLS = require('./handlers/link_state_sm');
 
 // Utils
 const { getNodeName } = require('./utils/node');
@@ -27,6 +28,14 @@ global.config = {
 global.nodes = [];
 global.broadcastedMessages = [];
 global.receivedMessages = [];
+
+// TODO remove default config
+// eslint-disable-next-line import/order
+const fs = require('fs');
+
+const config = JSON.parse(fs.readFileSync('routesTable.json'));
+global.config.routes = config.routes;
+
 
 inquirer
   .prompt(questions.serverInfo)
@@ -60,6 +69,9 @@ inquirer
         switch (messageData.algorithm) {
           case 'FLOOD':
             broadcastedTo = await algorithmHandler.flood(fromJid, messageData);
+            break;
+          case 'LINK_STATE':
+            await algorithmLS.sendMessageLS(messageData)
             break;
           default:
             console.log(messageData.algorithm);

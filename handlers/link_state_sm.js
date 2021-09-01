@@ -3,14 +3,14 @@ const chalk = require('chalk');
 // Utils
 const nodeUtils = require('../utils/node');
 
-module.exports.sendMessageLS = async (linkStateRoute, Message) => {
+module.exports.sendMessageLS = async (Message) => {
 
   linkStateRoute = Message.linkstate
 
-  if (linkStateRoute.length == 0) {
-    console.log(Message)
-    return
-  }
+  // if (linkStateRoute.length == 0) {
+  //   console.log(Message)
+  //   return
+  // }
 
   const nextNode = linkStateRoute[0];
 

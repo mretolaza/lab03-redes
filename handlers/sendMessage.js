@@ -33,7 +33,8 @@ module.exports = () => new Promise((resolve) => {
         algorithm,
         sendedDate: new Date(),
         extraData: {},
-        linkstate: []
+        linkstate: [],
+        ls_end_node: null
       };
 
       // Send message by flood
@@ -57,6 +58,8 @@ module.exports = () => new Promise((resolve) => {
         const node_to = messageData.to;//nodeUtils.getNodeJid(messageData.to);
         
         console.log('node from:', node_from, 'node to:',node_to);
+
+        messageData.ls_end_node = node_to;
 
         pathLS = await algorithmLinkState.linkstate(node_from, node_to);
 
