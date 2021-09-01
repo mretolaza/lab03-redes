@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h3 align="center">XMPP SIMPLE CHAT</h3>
+  <h3 align="center">ROUTE TABLE SIMULATION</h3>
 
   <p align="center">
     A network layer is simulated with routing algorithms that are capable of simulating how packet transfer networks work today on the Internet.
