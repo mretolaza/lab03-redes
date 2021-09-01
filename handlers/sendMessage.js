@@ -8,6 +8,9 @@ const constants = require('../constants');
 // Utils
 const nodeUtils = require('../utils/node');
 
+// Handler
+const algorithmLinkState = require('../handlers/link_state');
+
 module.exports = () => new Promise((resolve) => {
   inquirer
     .prompt(questions.messageInfo())
@@ -30,6 +33,7 @@ module.exports = () => new Promise((resolve) => {
         algorithm,
         sendedDate: new Date(),
         extraData: {},
+        linkstate: []
       };
 
       // Send message by flood
@@ -47,6 +51,31 @@ module.exports = () => new Promise((resolve) => {
             console.log(chalk.red(`Node ${neighbor.node} is not active yet`));
           }
         });
+      } else if (algorithm === constants.algorithm.LINK_STATE) {
+
+        const node_from = global.config.node; 
+        const node_to = messageData.to;//nodeUtils.getNodeJid(messageData.to);
+        
+        console.log('node from:', node_from, 'node to:',node_to);
+
+        pathLS = await algorithmLinkState.linkstate(node_from, node_to);
+
+        console.log('Message route:',pathLS);
+
+        const nextNode = pathLS[0];
+
+        toJID = nodeUtils.getNodeJid(nextNode);
+
+        pathLS.splice(path.indexOf(nextNode), 1);
+
+        messageData.linkstate = pathLS
+        
+        if (toJID) {
+          global.xmppClient
+            .sendMessage(toJID, JSON.stringify(messageData));
+        } else {
+          console.log(chalk.red(`Node ${nextNode} is not active yet`));
+        }
       }
 
       console.log(chalk.yellow('Message sent successfully'));
